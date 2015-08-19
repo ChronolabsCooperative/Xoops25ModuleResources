@@ -1,0 +1,49 @@
+<div style="padding: 23px;">
+	<div>
+		<div style="float: right; width: auto;"><{$pagenav}></div>
+	</div>
+	<div style="padding-top: 9px;">
+		<{foreach from=$upgrades item=module key=modulekey}>
+			<div id="outline" class="outline" style="width: 100% !important; padding: 8px; margin: 9px;">
+			    <form action="<{$xoops_url}>/modules/resources/admin.php?op=upgrades&fct=confirm&key=<{$modulekey}>" method="POST" >
+				<{if $module.module == true}>
+				<div style="text-align: center;">
+					<div style="float: left; width: auto; clear: none;">
+						<img src="<{$modules.icon}>" />
+					</div>
+					<div style="float: left; width: 28%; clear: none;">
+						<div style="font-size: 120%; font-weight: bold;"><{$modules.name}></div>
+						<div style="font-size: 109%; font-weight: 400;"><{$modules.author}></div>
+						<div style="font-size: 93%; font-weight: 200;"><{$modules.description}></div>
+					</div>
+					<div style="float: left; width: auto; clear: none;">
+						<select name="version" id="version" style="font-size: 145%; font-weight: bold;">
+							<{foreach from=$modules.versions item=version key=versionkey}>
+							<option value="<{$versionkey}>"><{$version}></option>
+						</select>
+					</div>
+					<div style="float: right; width: auto; clear: none;">
+						<input type="submit" value="<{$smarty.const._SUBMIT}>" />
+					</div>
+				</div>
+				<{elseif $module.theme == true}>
+				<div style="text-align: center;">
+					<div style="float: left; width: auto; clear: none;">
+						<img src="<{$modules.screenshot}>" height="42px" />
+					</div>
+					<div style="float: left; width: 28%; clear: none;">
+						<div style="font-size: 120%; font-weight: bold;"><{$modules.name}></div>
+					</div>
+					<div style="float: right; width: auto; clear: none;">
+						<input type="submit" value="<{$smarty.const._SUBMIT}>" />
+					</div>
+				</div>
+				<{/if}>
+				</form>
+			</div>
+		<{/foreach}>
+	</div>
+	<div style="color: rgb(230, 10, 10); font-size: 135%;">
+		<{$smarty.const._AM_RESOURCES_UPGRADES}>
+	</div>
+</div>

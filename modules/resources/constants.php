@@ -21,3 +21,11 @@
  * @see				http://internetfounder.wordpress.com
  */
 
+if (file_exists(XOOPS_VAR_PATH . DIRECTORY_SEPARATOR . basename(__DIR__) . DIRECTORY_SEPARATOR . "harvest.json"))
+	define("_RESOURCES_HARVEST_PENDING",true);
+
+if (file_exists(XOOPS_VAR_PATH . DIRECTORY_SEPARATOR . basename(__DIR__) . DIRECTORY_SEPARATOR . "upgrades.json"))
+	define("_RESOURCES_UPGRADES_PENDING",true);
+
+if (file_exists(XOOPS_VAR_PATH . DIRECTORY_SEPARATOR . basename(__DIR__) . DIRECTORY_SEPARATOR . "backups.json"))
+	define("_RESOURCES_BACKUPS_EXISTS",true);

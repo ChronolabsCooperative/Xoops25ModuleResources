@@ -60,30 +60,30 @@ class ResourcesCorePreload extends XoopsPreloadItem
     	}
     	if (!$modules = XoopsCache::read(basename(dirname(__DIR__)).'.modules.delays'))
     	{
-    		XoopsCache::write(basename(dirname(__DIR__)).'.modules', true, 3600 * 24 * 29 * 2);
-    		XoopsCache::write(basename(dirname(__DIR__)).'.modules.delays', $modules = XoopsLists::getModulesList(), 3600 * 24 * 31 * 2);
+    		XoopsCache::write(basename(dirname(__DIR__)).'.modules', true, 3600 * 24 * 29);
+    		XoopsCache::write(basename(dirname(__DIR__)).'.modules.delays', $modules = XoopsLists::getModulesList(), 3600 * 24 * 31);
     		foreach($modules as $module)
     		{
     			$map = getFolderMap($GLOBALS['xoops']->path('/modules/'.$module));
-    			XoopsCache::write(basename(dirname(__DIR__)).'.module'.$module, true, 3600 * 24 * 29 * 2);
-    			XoopsCache::write(basename(dirname(__DIR__)).'.module'.$module.'.delays', $map, 3600 * 24 * 31 * 2);
+    			XoopsCache::write(basename(dirname(__DIR__)).'.module'.$module, true, $seconds = 3600 * 24 * mt_rand(21.69999, 42.998876));;
+    			XoopsCache::write(basename(dirname(__DIR__)).'.module'.$module.'.delays', $map, ($seconds + 3600 * 4));
     			if (is_dir(XOOPS_PATH . '/modules/'.$module))
     			{
 	    			$map = getFolderMap(XOOPS_PATH . '/modules/'.$module, XOOPS_PATH);
-	    			XoopsCache::write(basename(dirname(__DIR__)).'.xoopslib'.$module, true, 3600 * 24 * 29 * 2);
-	    			XoopsCache::write(basename(dirname(__DIR__)).'.xoopslib'.$module.'.delays', $map, 3600 * 24 * 31 * 2);
+	    			XoopsCache::write(basename(dirname(__DIR__)).'.xoopslib'.$module, true, $seconds);
+	    			XoopsCache::write(basename(dirname(__DIR__)).'.xoopslib'.$module.'.delays', $map, ($seconds + 3600 * 4));
     			}
     		}
     	}
     	if (!$themes = XoopsCache::read(basename(dirname(__DIR__)).'.themes.delays'))
     	{
-    		XoopsCache::write(basename(dirname(__DIR__)).'.themes', true, 3600 * 24 * 29 * 2);
-    		XoopsCache::write(basename(dirname(__DIR__)).'.themes.delays', $themes = XoopsLists::getThemesList(), 3600 * 24 * 31 * 2);
+    		XoopsCache::write(basename(dirname(__DIR__)).'.themes', true, 3600 * 24 * 29);
+    		XoopsCache::write(basename(dirname(__DIR__)).'.themes.delays', $themes = XoopsLists::getThemesList(), 3600 * 24 * 31);
     		foreach($themes as $theme)
     		{
     			$map = getFolderMap($GLOBALS['xoops']->path('/themes/'.$theme));
-    			XoopsCache::write(basename(dirname(__DIR__)).'.theme'.$theme, true, 3600 * 24 * 29 * 2);
-    			XoopsCache::write(basename(dirname(__DIR__)).'.theme'.$theme.'.delays', $map, 3600 * 24 * 31 * 2);
+    			XoopsCache::write(basename(dirname(__DIR__)).'.theme'.$theme, true, $seconds = 3600 * 24 * mt_rand(21.69999, 42.998876));
+    			XoopsCache::write(basename(dirname(__DIR__)).'.theme'.$theme.'.delays', $map, ($seconds + 3600 * 4));
     		}
     	}	
     }

@@ -21,6 +21,7 @@
  * @see				http://internetfounder.wordpress.com
  */
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . "constants.php";
 
 if (!function_exists("resourcesInstantiateBlowfish"))
 {
@@ -230,6 +231,67 @@ if (!function_exists("getFolderList")) {
 	}
 }
 
+if (!function_exists("simplioKey")) {
+	/**
+	 *
+	 * @param unknown_type $passphrase
+	 * @param unknown_type $salt
+	 * @param unknown_type $key_length
+	 * @param unknown_type $raw_output
+	 * @return string
+	 */
+	function getMapFingering($map = array(), $module = '', $mode = 'module')
+	{
+		foreach($map as $key => $values)
+		{
+			if ($value['is'] == 'file')
+				switch($mode)
+				{
+					case "theme":
+					case "module":
+						$map[$key]['fingers'] = getFileFingers($GLOBALS['xoops']->path($value['path'] . DIRECTORY_SEPERATOR . $value['file']));
+						break;
+					case "xoopslib":
+						$map[$key]['fingers'] = getFileFingers(XOOPS_PATH . $value['path'] . DIRECTORY_SEPERATOR . $value['file']);
+						break;
+				}
+		}
+		return $map;
+	}
+}
+
+
+if (!function_exists("getFileFingers")) {
+	/**
+	 *
+	 * @param unknown_type $passphrase
+	 * @param unknown_type $salt
+	 * @param unknown_type $key_length
+	 * @param unknown_type $raw_output
+	 * @return string
+	 */
+	function getFileFingers($filename = '')
+	{
+		$file = explode("\n", str_replace(array("\R\n", "\n\R", "\n\n\n\n", "\n\n\n", "\n\n"), "\n", file_get_contents($filename)));
+		foreach($file as $line => $value)
+			if (strpos($value, "\\\\", $value))
+				$file[$line] = substr($value, 0, strpos($value, "\\\\", $value)-1);
+		foreach($file as $line => $value)
+			if (strpos($value, "#", $value))
+				$file[$line] = substr($value, 0, strpos($value, "#", $value)-1);
+		foreach($file as $line => $value)
+			foreach(array("\n", "\R", "\t", " ", "<?php", "?>", "<?", '^', '%', '$', '@', '!', '=', '+', '-', '*', '|', ':', ';', '.', ',', '<', '>', '{', '}', '(', ')', '`', '~', '_') as $metric)
+				while(strpos($value, $metric, $file[$line]))
+					$file[$line] = str_replace($value, '', $file[$line]);
+		foreach($file as $line => $value)
+			if (empty($value))
+				unset($file);
+		$md5 = array();
+		foreach($file as $line => $value)
+			$md5[] = sha1($value);
+		return $md5;
+	}
+}
 
 if (!function_exists("simplioKey")) {
 	/**

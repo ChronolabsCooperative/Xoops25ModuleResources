@@ -272,23 +272,48 @@ if (!function_exists("getFileFingers")) {
 	 */
 	function getFileFingers($filename = '')
 	{
-		$file = explode("\n", str_replace(array("\R\n", "\n\R", "\n\n\n\n", "\n\n\n", "\n\n"), "\n", file_get_contents($filename)));
+		$file = file($filename);
 		foreach($file as $line => $value)
-			if (strpos($value, "\\\\", $value))
+			if (strpos("aa".$value, "\\\\", $value))
 				$file[$line] = substr($value, 0, strpos($value, "\\\\", $value)-1);
 		foreach($file as $line => $value)
-			if (strpos($value, "#", $value))
+			if (strpos("aa".$value, "#", $value))
 				$file[$line] = substr($value, 0, strpos($value, "#", $value)-1);
 		foreach($file as $line => $value)
-			foreach(array("\n", "\R", "\t", " ", "<?php", "?>", "<?", '^', '%', '$', '@', '!', '=', '+', '-', '*', '|', ':', ';', '.', ',', '<', '>', '{', '}', '(', ')', '`', '~', '_') as $metric)
-				while(strpos($value, $metric, $file[$line]))
-					$file[$line] = str_replace($value, '', $file[$line]);
+			foreach(array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "=", "~", "`", "'", '"', "\n", "\R", "\t", "\c", " ", "<?php", '^', '%', '$', '@', '!', '+', '-', '*', '|', ':', ';', '.', ',', '<', '>', '{', '}', '(', ')', '_', '?', '\\', '/') as $metric)
+				while(strpos("aa".$value, $metric, $file[$line]))
+					$file[$line] = str_replace($metric, '', strtolower(trim($file[$line])));
 		foreach($file as $line => $value)
 			if (empty($value))
-				unset($file);
+				unset($file[$line]);
 		$md5 = array();
 		foreach($file as $line => $value)
-			$md5[] = sha1($value);
+		{
+			$variable = $extended = $function = $class = $private = $public = $static = $reserve = false;
+			foreach(array('class', 'function', 'var', 'property', 'static', 'public', 'private', 'extended') as $reserve)
+				if (strpos("aa" . $value, $reserve))
+					$reserve = true;
+			if ($reserve == true)
+			{
+				if (strpos("aa" . $value, 'var') || strpos("aa" . $value, 'property'))
+					$variable = true;
+				if (strpos("aa" . $value, 'static'))
+					$static = true;
+				if (strpos("aa" . $value, 'public'))
+					$public = true;
+				if (strpos("aa" . $value, 'private'))
+					$private = true;
+				if (substr($value, 0, 5) == 'class')
+					$class = true;
+				if (strpos("aa" . $value, 'extended') && $class == true)
+					$extended = true;
+				if (substr($value, 0, 8) == 'function')
+					$function = true;
+				if (strpos("aa" . $value, 'function') && ($static == true || $public == true || $private == true))
+					$function = true;
+			}
+			$md5[] = array('finger'=>sha1($value),'bytes'=>strlen($value),'reserve'=>$reserve, 'variable' => $variable, 'extended' => $extended, 'function' => $function, 'class' => $class, 'private' => $private, 'public' => $public, 'static' => $static);
+		}
 		return $md5;
 	}
 }

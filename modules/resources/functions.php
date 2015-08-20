@@ -28,6 +28,8 @@ if (!function_exists("resourcesInstantiateBlowfish"))
 	/**
 	 * Instances Blow Fish Encryption Salts
 	 * 
+	 * @return boolean
+	 * @access public
 	 */
 	function resourcesInstantiateBlowfish()
 	{
@@ -74,14 +76,17 @@ if (!function_exists("resourcesInstantiateBlowfish"))
 
 
 if (!function_exists("getURIData")) {
-
-	/* function getURIData()
-	 *
-	* 	Get a supporting domain system for the API
-	* @author 		Simon Antony Roberts (Chronolabs) simon@labs.coop
-	*
-	* @return 		float()
-	*/
+	/**
+	 *  Uses Curl to retrieve URL
+	 * 
+	 * @param string 	$uri		URL of the source for the data
+	 * @param array  	$posts 		$_POST Variable to Pass
+	 * @param array  	$headers	Header Variables to Pass
+	 * @param integer  	$timeout	Retievial Timeout
+	 * @param integer  	$connectout Connection Timeout
+	 * @return string
+	 * @access public
+	 */
 	function getURIData($uri = '', $posts = array(), $headers = array(), $timeout = 55, $connectout = 55)
 	{
 		if (!function_exists("curl_init"))
@@ -92,15 +97,14 @@ if (!function_exists("getURIData")) {
 			return false;
 		}
 		if (count($headers)) {
-			curl_setopt($btt, CURLOPT_HEADER, true);
 			curl_setopt($btt, CURLOPT_HEADERS, $headers);
-		} else
-			curl_setopt($btt, CURLOPT_HEADER, 0);
+		} 
 		if (count($posts)) {
 			curl_setopt($btt, CURLOPT_POST, true);
 			curl_setopt($btt, CURLOPT_POSTFIELDS, http_build_query($posts));
 		} else
 			curl_setopt($btt, CURLOPT_POST, 0);
+		curl_setopt($btt, CURLOPT_HEADER, false);
 		curl_setopt($btt, CURLOPT_CONNECTTIMEOUT, $connectout);
 		curl_setopt($btt, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($btt, CURLOPT_RETURNTRANSFER, true);
@@ -118,10 +122,10 @@ if (!function_exists("readRawFile")) {
 	/**
 	 * Return the contents of this File as a string.
 	 *
-	 * @param string $file
-	 * @param string $bytes where to start
-	 * @param string $mode
-	 * @param boolean $force If true then the file will be re-opened even if its already opened, otherwise it won't
+	 * @param string $file		file and path to retrieve
+	 * @param string $bytes 	where to start
+	 * @param string $mode		file open mode
+	 * @param boolean $force 	If true then the file will be re-opened even if its already opened, otherwise it won't
 	 * @return mixed string on success, false on failure
 	 * @access public
 	 */
@@ -148,9 +152,12 @@ if (!function_exists("readRawFile")) {
 
 if (!function_exists("writeRawFile")) {
 	/**
+	 * Write to filebase
 	 *
-	 * @param string $file
-	 * @param string $data
+	 * @param string $file		file and path of file
+	 * @param string $data		data to write
+	 * @return boolean
+	 * @access public
 	 */
 	function writeRawFile($file = '', $data = '')
 	{
@@ -167,10 +174,13 @@ if (!function_exists("writeRawFile")) {
 
 if (!function_exists("mkdirSecure")) {
 	/**
+	 * Makes a folder and secures the folder with .htaccess
 	 *
-	 * @param unknown_type $path
-	 * @param unknown_type $perm
-	 * @param unknown_type $secure
+	 * @param string $path		folder path
+	 * @param string $perm		folder permissions
+	 * @param boolean $secure	secure the folder
+	 * @return boolean
+	 * @access public
 	 */
 	function mkdirSecure($path = '', $perm = 0777, $secure = true)
 	{
@@ -190,9 +200,12 @@ if (!function_exists("mkdirSecure")) {
 
 if (!function_exists("getFolderMap")) {
 	/**
+	 * get file map recursively from a folder
 	 *
-	 * @param string $path
-	 * @param string $root
+	 * @param string $path		path to search
+	 * @param string $base		base path to remove from array
+	 * @return array
+	 * @access public
 	 */
 	function getFolderMap($path = '', $base = '')
 	{
@@ -213,9 +226,11 @@ if (!function_exists("getFolderMap")) {
 
 if (!function_exists("getFolderList")) {
 	/**
+	 * get file + folder map recursively from a folder
 	 *
-	 * @param string $path
-	 * @param string $root
+	 * @param string $path		path to search
+	 * @return array
+	 * @access public
 	 */
 	function getFolderList($path = '')
 	{
@@ -231,14 +246,15 @@ if (!function_exists("getFolderList")) {
 	}
 }
 
-if (!function_exists("simplioKey")) {
+if (!function_exists("getMapFingering")) {
 	/**
+	 * Get Folder Map Fingerprints for files
 	 *
-	 * @param unknown_type $passphrase
-	 * @param unknown_type $salt
-	 * @param unknown_type $key_length
-	 * @param unknown_type $raw_output
-	 * @return string
+	 * @param array $map		Folder Map Array
+	 * @param string $module	module or theme dirname
+	 * @param string $mode		Mode routine is running in
+	 * @return array
+	 * @access public
 	 */
 	function getMapFingering($map = array(), $module = '', $mode = 'module')
 	{
@@ -263,16 +279,25 @@ if (!function_exists("simplioKey")) {
 
 if (!function_exists("getFileFingers")) {
 	/**
+	 * Get File Forensic Fingerprint
 	 *
-	 * @param unknown_type $passphrase
-	 * @param unknown_type $salt
-	 * @param unknown_type $key_length
-	 * @param unknown_type $raw_output
-	 * @return string
+	 * @param string $filename	file to process fully pathed
+	 * @return array
+	 * @access public
 	 */
 	function getFileFingers($filename = '')
 	{
 		$file = file($filename);
+		$strip = false;
+		foreach($file as $line => $value)
+		{
+			if (strpos("aa".$value, "/*", $value))
+				$strip = true;
+			if ($strip==true)
+				unset($file[$line]);
+			if (strpos("aa".$value, "*/", $value))
+				$strip = false;
+		}
 		foreach($file as $line => $value)
 			if (strpos("aa".$value, "\\\\", $value))
 				$file[$line] = substr($value, 0, strpos($value, "\\\\", $value)-1);
@@ -318,41 +343,33 @@ if (!function_exists("getFileFingers")) {
 	}
 }
 
-if (!function_exists("simplioKey")) {
+if (!function_exists("getXORKey")) {
 	/**
+	 * Creates with XOR Functions Cipher Key for Encryption
 	 *
-	 * @param unknown_type $passphrase
-	 * @param unknown_type $salt
-	 * @param unknown_type $key_length
-	 * @param unknown_type $raw_output
+	 * @param string $passphrase
+	 * @param string $salt
+	 * @param integer $key_length
+	 * @param boolean $raw_output
 	 * @return string
+	 * @access public
 	 */
-	function simplioKey($passphrase = '', $salt = '', $key_length = 128, $raw_output = false)
+	function getXORKey($passphrase = '', $salt = '', $key_length = 128, $raw_output = false)
 	{
-
 		if (empty($passphrase) || empty($salt))
 			return false;
-	
-		if($key_length <= 0) {
+		if($key_length <= 0)
 			$key_length = 128;
-		}
-	
 		while(strlen($passphrase)<$key_length)
-			$passphrase = $passphrase . $passphrase;
-	
+			$passphrase .= (string)implode("", array_reverse(explode("", $passphrase)));
 		while(strlen($salt)<$key_length)
-			$salt = $salt . $salt;
-	
+			$salt .= (string)implode("", array_reverse(explode("", $salt)));
 		$output = '';
 		for($rt=1;$rt<=$key_length;$rt++)
-		{
-			$output = $output . (substr($passphrase, $rt, 1) ^ substr($salt, strlen($salt)- $rt, 1) ^ substr($passphrase, strlen($passphrase) - $rt, 1));
-		}
-	
-		if($raw_output) {
+			$output .= (string)((string)(substr($passphrase, $rt, 1) ^ substr($salt, strlen($salt)- $rt, 1)) ^ substr($passphrase, strlen($passphrase) - $rt, 1));
+		if($raw_output)
 			return substr($output, 0, $key_length);
-		} else {
+		else
 			return base64_encode(substr($output, 0, $key_length));
-		}
 	}
 }

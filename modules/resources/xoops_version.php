@@ -123,14 +123,11 @@ $modversion['adminindex']  				= _MI_RESOURCES_MODULE_ADMININDEX; 		//"admin.php
 $modversion['adminmenu']   				= _MI_RESOURCES_MODULE_ADMINMENU; 		//"menu.php";
 $modversion['system_menu'] 				= _MI_RESOURCES_MODULE_SYSTEMMENU;
 
-
-
 // Config categories
 $modversion['configcat']['email']['name']        = _MI_RESOURCES_CONFCAT_EMAIL;
 $modversion['configcat']['email']['description'] = _MI_RESOURCES_CONFCAT_EMAIL_DESC;
 $modversion['configcat']['methods']['name']        = _MI_RESOURCES_CONFCAT_METHODS;
 $modversion['configcat']['methods']['description'] = _MI_RESOURCES_CONFCAT_METHODS_DESC;
-
 
 // Config categories
 $i=0;
@@ -189,11 +186,20 @@ $modversion['config'][$i]['default']     = true;
 $modversion['config'][$i]['options']     = array();
 $modversion['config'][$i]['category']    = 'email';
 ++$i;
-$modversion['config'][$i]['name']        = 'support';
-$modversion['config'][$i]['title']       = '_MI_RESOURCES_SUPPORT_HARVEST';
-$modversion['config'][$i]['description'] = '_MI_RESOURCES_SUPPORT_HARVEST_DESC';
+$modversion['config'][$i]['name']        = 'harvester';
+$modversion['config'][$i]['title']       = '_MI_RESOURCES_HARVESTER';
+$modversion['config'][$i]['description'] = '_MI_RESOURCES_HARVESTER_DESC';
 $modversion['config'][$i]['formtype']    = 'yesno';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = true;
 $modversion['config'][$i]['options']     = array();
+$modversion['config'][$i]['category']    = 'methods';
+++$i;
+$modversion['config'][$i]['name']        = 'scheduling';
+$modversion['config'][$i]['title']       = '_MI_RESOURCES_SCHEDULING';
+$modversion['config'][$i]['description'] = '_MI_RESOURCES_SCHEDULING_DESC';
+$modversion['config'][$i]['formtype']    = 'select';
+$modversion['config'][$i]['valuetype']   = 'text';
+$modversion['config'][$i]['default']     = 'preloader';
+$modversion['config'][$i]['options']     = array(_MI_RESOURCES_SCHEDULING_PRELOADER => 'preloader', _MI_RESOURCES_SCHEDULING_CRONJOB => 'cronjob');
 $modversion['config'][$i]['category']    = 'methods';

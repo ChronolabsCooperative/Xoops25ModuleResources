@@ -38,6 +38,19 @@ class ResourcesCorePreload extends XoopsPreloadItem
      */
     function eventCoreFooterEnd($args)
     {
+    	global $resourcesModule, $resourcesConfigsList;
+    	
+    	if (empty($resourcesModule))
+    	{
+    		if (is_a($resourcesModule = xoops_gethandler('module')->getByDirname(basename(dirname(__DIR__))), "XoopsModule"))
+    		{
+    			if (empty($resourcesConfigsList))
+    			{
+    				$resourcesConfigsList = xoops_gethandler('config')->getConfigsList($resourcesModule->getVar('mid'));
+    			}
+    		}
+    	}
+    	
     	xoops_load("XoopsCache");
     	xoops_load("XoopsLists");
     	if (!$themes = XoopsCache::read(basename(dirname(__DIR__)).'.available.themes'))
@@ -58,7 +71,7 @@ class ResourcesCorePreload extends XoopsPreloadItem
     		if (!empty($themes))
     			XoopsCache::write(basename(dirname(__DIR__)).'.available.peers', $peers, 3600 * 24 * mt_rand(5.99999, 24.99999));
     	}
-    	if (!$modules = XoopsCache::read(basename(dirname(__DIR__)).'.modules.delays'))
+    	if (!$modules = XoopsCache::read(basename(dirname(__DIR__)).'.modules.delays') && $resourcesConfigsList['harvester'])
     	{
     		XoopsCache::write(basename(dirname(__DIR__)).'.modules', true, 3600 * 24 * 29);
     		XoopsCache::write(basename(dirname(__DIR__)).'.modules.delays', $modules = XoopsLists::getModulesList(), 3600 * 24 * 31);
@@ -75,7 +88,7 @@ class ResourcesCorePreload extends XoopsPreloadItem
     			}
     		}
     	}
-    	if (!$themes = XoopsCache::read(basename(dirname(__DIR__)).'.themes.delays'))
+    	if (!$themes = XoopsCache::read(basename(dirname(__DIR__)).'.themes.delays') && $resourcesConfigsList['harvester'])
     	{
     		XoopsCache::write(basename(dirname(__DIR__)).'.themes', true, 3600 * 24 * 29);
     		XoopsCache::write(basename(dirname(__DIR__)).'.themes.delays', $themes = XoopsLists::getThemesList(), 3600 * 24 * 31);
